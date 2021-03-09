@@ -1,0 +1,145 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.Vue-Toastification__container {
+	z-index: 9999;
+	position: fixed;
+	padding: 4px;
+	box-sizing: border-box;
+	display: flex;
+	color: #fff;
+	flex-direction: column;
+	pointer-events: none;
+	padding: 0;
+	top: 0;
+	right: 0;
+	margin: 0;
+	@apply w-full max-w-full sm:max-w-xl;
+}
+
+.Vue-Toastification__toast {
+	height: 100px;
+}
+
+@keyframes fadeOutTop {
+	0% {
+		transform: translateY(0);
+		opacity: 1;
+	}
+	100% {
+		transform: translateY(-50px);
+		opacity: 0;
+	}
+}
+@keyframes fadeOutLeft {
+	0% {
+		transform: translateX(0);
+		opacity: 1;
+	}
+	100% {
+		transform: translateX(-50px);
+		opacity: 0;
+	}
+}
+@keyframes fadeOutBottom {
+	0% {
+		transform: translateY(0);
+		opacity: 1;
+	}
+	100% {
+		transform: translateY(50px);
+		opacity: 0;
+	}
+}
+@keyframes fadeOutRight {
+	0% {
+		transform: translateX(0);
+		opacity: 1;
+	}
+	100% {
+		transform: translateX(50px);
+		opacity: 0;
+	}
+}
+@keyframes fadeInLeft {
+	0% {
+		transform: translateX(-50px);
+		opacity: 0;
+	}
+	100% {
+		transform: translateX(0);
+		opacity: 1;
+	}
+}
+@keyframes fadeInRight {
+	0% {
+		transform: translateX(50px);
+		opacity: 0;
+	}
+	100% {
+		transform: translateX(0);
+		opacity: 1;
+	}
+}
+@keyframes fadeInTop {
+	0% {
+		transform: translateY(-50px);
+		opacity: 0;
+	}
+	100% {
+		transform: translateY(0);
+		opacity: 1;
+	}
+}
+@keyframes fadeInBottom {
+	0% {
+		transform: translateY(50px);
+		opacity: 0;
+	}
+	100% {
+		transform: translateY(0);
+		opacity: 1;
+	}
+}
+.Vue-Toastification__fade-enter-active.top-left,
+.Vue-Toastification__fade-enter-active.bottom-left {
+	animation-name: fadeInLeft;
+}
+.Vue-Toastification__fade-enter-active.top-right,
+.Vue-Toastification__fade-enter-active.bottom-right {
+	animation-name: fadeInRight;
+}
+.Vue-Toastification__fade-enter-active.top-center {
+	animation-name: fadeInTop;
+}
+.Vue-Toastification__fade-enter-active.bottom-center {
+	animation-name: fadeInBottom;
+}
+
+.Vue-Toastification__fade-leave-active:not(.disable-transition).top-left,
+.Vue-Toastification__fade-leave-active:not(.disable-transition).bottom-left {
+	animation-name: fadeOutLeft;
+}
+.Vue-Toastification__fade-leave-active:not(.disable-transition).top-right,
+.Vue-Toastification__fade-leave-active:not(.disable-transition).bottom-right {
+	animation-name: fadeOutRight;
+}
+.Vue-Toastification__fade-leave-active:not(.disable-transition).top-center {
+	animation-name: fadeOutTop;
+}
+.Vue-Toastification__fade-leave-active:not(.disable-transition).bottom-center {
+	animation-name: fadeOutBottom;
+}
+
+.Vue-Toastification__fade-leave-active,
+.Vue-Toastification__fade-enter-active {
+	animation-duration: 300ms;
+	animation-fill-mode: both;
+}
+
+.Vue-Toastification__fade-move {
+	transition-timing-function: ease-in-out;
+	transition-property: all;
+	transition-duration: 200ms;
+}
