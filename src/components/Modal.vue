@@ -11,7 +11,16 @@
 					leave-to-class="opacity-0"
 				>
 					<div class="fixed inset-0 transition-opacity" aria-hidden="true" v-show="isModalShown">
-						<div class="absolute inset-0 bg-gray-500 opacity-75" @click="isModalShown = false"></div>
+						<button
+							v-if="closable"
+							type="button"
+							class="absolute inset-0 w-full h-full cursor-default bg-gray-500 opacity-75 focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-primary-500"
+							@click="isModalShown = false"
+						></button>
+						<button
+							v-else
+							class="absolute inset-0 w-full h-full cursor-default bg-gray-500 opacity-75 focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-primary-500"
+						></button>
 					</div>
 				</transition>
 				<!-- This element is to trick the browser into centering the modal contents. -->
@@ -33,8 +42,9 @@
 					>
 						<div class="hidden sm:block absolute top-0 right-0 pt-4 pr-4">
 							<button
+								v-if="closable"
 								type="button"
-								class="bg-white rounded-md text-gray-400 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+								class="bg-white rounded-md text-gray-400 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500"
 							>
 								<span class="sr-only">Close</span>
 								<svg
@@ -50,7 +60,10 @@
 							</button>
 						</div>
 						<div class="sm:flex sm:items-start">
-							<div class="mx-auto flex-shrink-0 flex items-center justify-center h-12 w-12 rounded-full bg-red-100 sm:mx-0 sm:h-10 sm:w-10">
+							<div
+								v-if="props.type === 'danger'"
+								class="mx-auto flex-shrink-0 flex items-center justify-center h-12 w-12 bg-red-100 rounded-full sm:mx-0 sm:h-10 sm:w-10"
+							>
 								<!-- Heroicon name: outline/exclamation -->
 								<svg
 									class="h-6 w-6 text-red-600"
@@ -68,29 +81,53 @@
 									/>
 								</svg>
 							</div>
+							<div
+								v-else
+								class="mx-auto flex-shrink-0 flex items-center justify-center h-12 w-12 bg-green-100 rounded-full sm:mx-0 sm:h-10 sm:w-10"
+							>
+								<svg
+									class="h-6 w-6 text-green-600"
+									xmlns="http://www.w3.org/2000/svg"
+									fill="none"
+									viewBox="0 0 24 24"
+									stroke="currentColor"
+									aria-hidden="true"
+								>
+									<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+								</svg>
+							</div>
 							<div class="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left">
 								<h3 class="text-lg leading-6 font-medium text-gray-900" id="modal-headline">
-									{{ title }}
+									{{ props.title }}
 								</h3>
 								<div class="mt-2">
 									<p class="text-sm text-gray-500">
-										{{ content }}
+										{{ props.content }}
 									</p>
 								</div>
 							</div>
 						</div>
 						<div class="mt-5 sm:mt-4 sm:flex sm:flex-row-reverse">
 							<button
+								v-if="props.type === 'danger'"
 								type="button"
 								class="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-red-600 text-base font-medium text-white hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 sm:ml-3 sm:w-auto sm:text-sm"
 							>
-								Deactivate
+								{{ props.actionText }}
+							</button>
+							<button
+								v-else
+								type="button"
+								class="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-primary-500 text-base font-medium text-white hover:bg-primary-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 sm:ml-3 sm:w-auto sm:text-sm"
+							>
+								{{ props.actionText }}
 							</button>
 							<button
 								type="button"
-								class="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:mt-0 sm:w-auto sm:text-sm"
+								class="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 sm:mt-0 sm:w-auto sm:text-sm"
+								@click.prevent="isModalShown = false"
 							>
-								Cancel
+								{{ props.cancelText }}
 							</button>
 						</div>
 					</div>
@@ -117,11 +154,25 @@
 				type: String,
 				required: true,
 			},
+			closable: {
+				type: Boolean,
+				default: true,
+			},
+			type: {
+				type: String,
+				default: "success",
+			},
+			actionText: {
+				type: String,
+				required: true,
+			},
+			cancelText: {
+				type: String,
+				default: "Cancel",
+			},
 		},
 		setup(props, { emit }) {
 			const { isModalOpen } = toRefs(props);
-			const { title } = toRefs(props);
-			const { content } = toRefs(props);
 			const isModalShown = ref(false);
 
 			watch(isModalOpen, () => {
@@ -134,7 +185,7 @@
 				}, 200);
 			});
 
-			return { isModalOpen, isModalShown, title, content };
+			return { isModalOpen, isModalShown, props };
 		},
 	});
 </script>

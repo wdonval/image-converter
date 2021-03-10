@@ -7,7 +7,7 @@
 		>
 			Modal
 		</button>
-		<Modal v-model:isModalOpen="modal" title="Test" content="test"></Modal>
+		<Modal v-model:isModalOpen="modal" title="Test" content="test" :closable="false" action-text="Clear" cancel-text=""></Modal>
 		<div class="bg-white shadow rounded-lg overflow-visible">
 			<div class="px-4 py-5 sm:p-6 space-y-4">
 				<Upload @upload="images = $event" />
