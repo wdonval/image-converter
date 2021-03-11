@@ -2,10 +2,10 @@
 	<component :is="this.$route.meta.layout || 'div'">
 		<router-view />
 	</component>
-	<dialogs-wrapper></dialogs-wrapper>
 </template>
 
 <script>
+	import outputFormats from "/~/data/output_formats.js";
 	const Store = require("electron-store");
 	const electronStore = new Store();
 
@@ -19,6 +19,7 @@
 				const theme = electronStore.get("settings.general.theme");
 				const outputPath = electronStore.get("settings.general.outputPath");
 				const format = electronStore.get("format");
+				const availableFormats = electronStore.get("settings.formats.available");
 
 				if (language) {
 					this.$store.dispatch("setLanguage", language);
@@ -31,6 +32,9 @@
 				}
 				if (format) {
 					this.$store.dispatch("setFormat", format);
+				}
+				if (availableFormats) {
+					this.$store.dispatch("setFormats", availableFormats);
 				}
 			},
 		},

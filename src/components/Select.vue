@@ -105,7 +105,8 @@
 			const id = Math.random()
 				.toString(36)
 				.substr(2, 9);
-			const found = props.value ? props.data.find((item) => item.value === props.value) : null;
+			//const found = props.value ? props.data.find((item) => item.value === props.value) : null;
+			const found = null;
 			const selected = found ? ref(props.data[props.data.indexOf(found)]) : ref(props.data[0]);
 
 			onMounted(() => {
