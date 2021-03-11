@@ -14,12 +14,12 @@
 						<button
 							v-if="closable"
 							type="button"
-							class="absolute inset-0 w-full h-full cursor-default bg-gray-500 opacity-75 focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-primary-500"
+							class="absolute inset-0 w-full h-full cursor-default bg-blueGray-500 opacity-75 focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-primary-500"
 							@click="isModalShown = false"
 						></button>
 						<button
 							v-else
-							class="absolute inset-0 w-full h-full cursor-default bg-gray-500 opacity-75 focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-primary-500"
+							class="absolute inset-0 w-full h-full cursor-default bg-blueGray-500 opacity-75 focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-primary-500"
 						></button>
 					</div>
 				</transition>
@@ -44,7 +44,7 @@
 							<button
 								v-if="closable"
 								type="button"
-								class="bg-white rounded-md text-gray-400 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500"
+								class="bg-white rounded-md text-blueGray-400 hover:text-blueGray-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500"
 							>
 								<span class="sr-only">Close</span>
 								<svg
@@ -97,11 +97,11 @@
 								</svg>
 							</div>
 							<div class="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left">
-								<h3 class="text-lg leading-6 font-medium text-gray-900" id="modal-headline">
+								<h3 class="text-lg leading-6 font-medium text-blueGray-900" id="modal-headline">
 									{{ props.title }}
 								</h3>
 								<div class="mt-2">
-									<p class="text-sm text-gray-500">
+									<p class="text-sm text-blueGray-500">
 										{{ props.content }}
 									</p>
 								</div>
@@ -124,7 +124,7 @@
 							</button>
 							<button
 								type="button"
-								class="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 sm:mt-0 sm:w-auto sm:text-sm"
+								class="mt-3 w-full inline-flex justify-center rounded-md border border-blueGray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-blueGray-700 hover:text-blueGray-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 sm:mt-0 sm:w-auto sm:text-sm"
 								@click.prevent="isModalShown = false"
 							>
 								{{ props.cancelText }}
