@@ -7,6 +7,7 @@ const settings = {
 			language: null,
 			theme: null,
 			outputPath: null,
+			formats: [],
 		};
 	},
 	mutations: {
@@ -18,6 +19,9 @@ const settings = {
 		},
 		setOutputPath(state, payload) {
 			state.outputPath = payload;
+		},
+		setFormats(state, payload) {
+			state.formats = payload;
 		},
 	},
 	actions: {
@@ -35,6 +39,11 @@ const settings = {
 			commit("setOutputPath", value);
 			electronStore.set("settings.general.outputPath", value);
 			console.log("setOutputPath called", state.outputPath);
+		},
+		setFormats({ state, commit }, value) {
+			commit("setFormats", value);
+			electronStore.set("settings.formats.available", value);
+			console.log("setFormats called", state.formats);
 		},
 	},
 	getters: {},

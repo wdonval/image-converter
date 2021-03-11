@@ -28,6 +28,7 @@ const images = {
 	actions: {
 		setImages({ state, commit }, images) {
 			commit("setImages", images);
+			electronStore.set("images", images);
 			console.log("setImages called", state.images);
 		},
 		addImage({ state, commit }, image) {
