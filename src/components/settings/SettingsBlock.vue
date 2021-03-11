@@ -17,7 +17,7 @@
 			<div class="px-4 py-3 bg-blueGray-50 text-right sm:px-6 rounded-b-md">
 				<button
 					type="submit"
-					class="bg-blueGray-800 border border-transparent rounded-md shadow-sm py-2 px-4 inline-flex justify-center text-sm font-medium text-white hover:bg-blueGray-900 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blueGray-900"
+					class="inline-flex w-full sm:w-auto justify-center items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-primary hover:bg-primary-600 focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-primary-500 transition-colors duration-150"
 				>
 					Save
 				</button>

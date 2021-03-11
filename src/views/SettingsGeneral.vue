@@ -9,7 +9,7 @@
 		<SettingsBlock :index="2" title="Output" @save-settings="saveFormOutput">
 			<div class="space-y-4">
 				<div>
-					<label for="email" class="block text-sm font-medium text-blueGray-700">Output path</label>
+					<label for="email" class="block text-sm font-medium text-blueGray-700">Output directory</label>
 					<div class="mt-1 flex rounded-md shadow-sm">
 						<div class="relative flex items-stretch flex-grow focus-within:z-10">
 							<input
@@ -34,9 +34,10 @@
 									d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z"
 								/>
 							</svg>
-							<span>Choose folder</span>
+							<span>Select folder</span>
 						</button>
 						<input
+							tabindex="-1"
 							ref="output_directory"
 							type="file"
 							webkitDirectory
@@ -46,6 +47,7 @@
 							@change="updateOutputPath"
 						/>
 					</div>
+					<p v-if="formOutput.errors.outputPath" class="mt-2 text-sm text-red-600">{{ formOutput.errors.outputPath }}</p>
 				</div>
 			</div>
 		</SettingsBlock>
@@ -59,6 +61,7 @@
 	import Notification from "/~/components/Notification.vue";
 	import { useToast } from "vue-toastification";
 	const path = require("path");
+	import { promises as fsp } from "fs";
 
 	export default {
 		data() {
@@ -80,6 +83,7 @@
 				},
 				formOutput: {
 					outputPath: null,
+					errors: {},
 				},
 			};
 		},
@@ -112,10 +116,22 @@
 				this.notification.props.content = "User Interface settings updated";
 				this.toast(this.notification);
 			},
-			saveFormOutput() {
-				this.$store.dispatch("setOutputPath", this.formOutput.outputPath);
-				this.notification.props.content = "Output settings updated";
-				this.toast(this.notification);
+			async saveFormOutput() {
+				if (await this.checkPath()) {
+					this.$store.dispatch("setOutputPath", this.formOutput.outputPath);
+					this.notification.props.content = "Output settings updated";
+					this.toast(this.notification);
+				}
+			},
+			async checkPath() {
+				this.formOutput.errors.outputPath = null;
+				try {
+					await fsp.access(this.formOutput.outputPath);
+					return true;
+				} catch (error) {
+					this.formOutput.errors.outputPath = "This directory does not exist.";
+					return false;
+				}
 			},
 		},
 		components: {
