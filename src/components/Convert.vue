@@ -1,6 +1,12 @@
 <template>
 	<div class="flex sm:space-x-3 space-x-0 sm:space-y-0 space-y-2 flex-wrap">
-		<Select class="flex-grow flex-shrink-0 sm:flex-shrink min-w-0" :data="formats" :value="selectedFormat?.value" @data-changed="setFormat($event)" />
+		<Select
+			class="flex-grow flex-shrink-0 sm:flex-shrink min-w-0"
+			:data="formats"
+			:value="selectedFormat ? selectedFormat.value : null"
+			@data-changed="setFormat($event)"
+			no-data="No format available (Go to settings to active formats)"
+		/>
 		<button
 			type="button"
 			class="inline-flex w-full sm:w-auto justify-center items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-primary hover:bg-primary-600 focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-primary-500 transition-colors duration-150"
@@ -38,6 +44,7 @@
 		},
 		created() {
 			this.initialize();
+			console.log(this.formats, this.selectedFormat);
 		},
 		methods: {
 			initialize() {
@@ -49,12 +56,13 @@
 				this.$store.dispatch("setFormat", this.selectedFormat);
 			},
 			async convert() {
-				this.$store.getters.getImages.forEach(async (image) => {
+				this.$store.getters.getImages.forEach(async (image, index) => {
 					const arrayBuffer = await image.file.arrayBuffer();
 					const buffer = Buffer.from(arrayBuffer);
 
 					let converted;
 					let ext;
+					if (!this.selectedFormat) return;
 					switch (this.selectedFormat.value.toLowerCase()) {
 						case "avif":
 							converted = await sharp(buffer).avif();
@@ -81,6 +89,7 @@
 					const filename = path.parse(image.file.name).name;
 					converted.toFile(`${outputPath}/${filename}.${ext}`);
 				});
+				this.$store.dispatch("clearImages");
 			},
 		},
 	};
