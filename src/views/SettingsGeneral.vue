@@ -15,8 +15,6 @@
 							<input
 								v-model="formOutput.outputPath"
 								type="text"
-								name="email"
-								id="email"
 								class="focus:ring-primary-500 focus:border-primary-500 block w-full rounded-none rounded-l-md sm:text-sm border-blueGray-300"
 								placeholder="output/path/of/images"
 							/>
@@ -24,7 +22,7 @@
 						<button
 							type="button"
 							class="-ml-px relative inline-flex items-center space-x-2 px-4 py-2 border border-blueGray-300 text-sm font-medium rounded-r-md text-blueGray-700 bg-blueGray-50 hover:bg-blueGray-100 focus:outline-none focus:ring-1 focus:ring-primary-500 focus:border-primary-500"
-							@click.prevent="$refs.output_directory.click()"
+							@click.prevent="updateOutputPath"
 						>
 							<svg class="h-5 w-5 text-blueGray-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
 								<path
@@ -36,18 +34,8 @@
 							</svg>
 							<span>Select folder</span>
 						</button>
-						<input
-							tabindex="-1"
-							ref="output_directory"
-							type="file"
-							webkitDirectory
-							name="output_directory"
-							id="output_directory"
-							class="sr-only"
-							@change="updateOutputPath"
-						/>
 					</div>
-					<p v-if="formOutput.errors.outputPath" class="mt-2 text-sm text-red-600">{{ formOutput.errors.outputPath }}</p>
+					<p class="mt-2 text-sm text-gray-500" id="email-description">If the selected directory does not exist, it will be created.</p>
 				</div>
 			</div>
 		</SettingsBlock>
@@ -62,6 +50,7 @@
 	import { useToast } from "vue-toastification";
 	const path = require("path");
 	import { promises as fsp } from "fs";
+	const dialog = require("electron").remote.dialog;
 
 	export default {
 		data() {
@@ -107,8 +96,14 @@
 			setTheme(selected) {
 				this.formUserInterface.theme = selected.value;
 			},
-			updateOutputPath(event) {
-				this.formOutput.outputPath = event.target.files[0].path ? path.dirname(event.target.files[0].path) : null;
+			async updateOutputPath(event) {
+				const result = await dialog.showOpenDialog({
+					properties: ["openDirectory"],
+				});
+				console.log("directories selected", result.filePaths);
+				if (result.filePaths.length > 0) {
+					this.formOutput.outputPath = result.filePaths[0];
+				}
 			},
 			saveFormUserInterface() {
 				this.$store.dispatch("setLanguage", this.formUserInterface.language);
