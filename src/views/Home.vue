@@ -1,13 +1,5 @@
 <template>
 	<div class="space-y-8">
-		<button
-			type="button"
-			class="inline-flex items-center px-4 py-2 border border-blueGray-300 shadow-sm text-sm font-medium rounded-md text-blueGray-700 bg-white hover:bg-blueGray-50 focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-primary"
-			@click="modal = true"
-		>
-			Modal
-		</button>
-		<Modal v-model:isModalOpen="modal" title="Test" content="test" :closable="false" action-text="Clear" cancel-text=""></Modal>
 		<div class="bg-white shadow rounded-lg overflow-visible">
 			<div class="px-4 py-5 sm:p-6 space-y-4">
 				<Upload @upload="images = $event" />
