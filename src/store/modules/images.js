@@ -28,7 +28,6 @@ const images = {
 	actions: {
 		setImages({ state, commit }, images) {
 			commit("setImages", images);
-			electronStore.set("images", images);
 			console.log("setImages called", state.images);
 		},
 		addImage({ state, commit }, image) {
@@ -48,8 +47,13 @@ const images = {
 			console.log("setMessage called", state.message);
 		},
 		setFormat({ state, commit }, value) {
-			commit("setFormat", value);
-			electronStore.set("format", value);
+			if (!value) {
+				commit("setFormat", null);
+				electronStore.delete("format");
+			} else {
+				commit("setFormat", value);
+				electronStore.set("format", value);
+			}
 			console.log("setFormat called", state.format);
 		},
 	},
