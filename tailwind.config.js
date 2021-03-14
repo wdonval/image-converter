@@ -4,7 +4,11 @@ module.exports = {
 	purge: {
 		content: ["./index.html", "./src/**/*.{vue,js,ts,jsx,tsx}"],
 	},
+	darkMode: "media",
 	theme: {
+		fontFamily: {
+			sans: ["Inter var", "Arial", "sans-serif"],
+		},
 		colors: {
 			transparent: "transparent",
 			current: "currentColor",
