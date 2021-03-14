@@ -46,7 +46,9 @@ const settings = {
 			console.log("setFormats called", state.formats);
 		},
 	},
-	getters: {},
+	getters: {
+		getFormats: (state) => state.formats,
+	},
 };
 
 export default settings;

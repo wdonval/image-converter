@@ -12,8 +12,8 @@ const images = {
 		setImages(state, payload) {
 			state.images = [...payload];
 		},
-		addImage(state, payload) {
-			state.images = [...state.images, { payload }];
+		addImages(state, payload) {
+			state.images = [...state.images, ...payload];
 		},
 		clearImages(state) {
 			state.images = [];
@@ -30,9 +30,9 @@ const images = {
 			commit("setImages", images);
 			console.log("setImages called", state.images);
 		},
-		addImage({ state, commit }, image) {
-			commit("addImage", image);
-			console.log("addImage called", state.images);
+		addImages({ state, commit }, images) {
+			commit("addImages", images);
+			console.log("addImages called", state.images);
 		},
 		clearImages({ state, commit }) {
 			commit("clearImages");
