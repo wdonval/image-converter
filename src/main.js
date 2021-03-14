@@ -14,7 +14,7 @@ const toastOptions = {
 	icon: false,
 	draggable: true,
 	pauseOnFocusLoss: false,
-	pauseOnHover: false,
+	pauseOnHover: true,
 };
 
 createApp(App)
