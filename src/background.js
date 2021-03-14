@@ -1,6 +1,6 @@
 "use strict";
 
-import { app, protocol, BrowserWindow } from "electron";
+import { app, protocol, BrowserWindow, nativeTheme } from "electron";
 import { createProtocol } from "vue-cli-plugin-electron-builder/lib";
 import installExtension, { VUEJS_DEVTOOLS } from "electron-devtools-installer";
 const isDevelopment = process.env.NODE_ENV !== "production";
@@ -19,14 +19,15 @@ async function createWindow() {
 		height: 600,
 		autoHideMenuBar: true,
 		webPreferences: {
-			// Use pluginOptions.nodeIntegration, leave this alone
-			// See nklayman.github.io/vue-cli-plugin-electron-builder/guide/security.html#node-integration for more info
 			nodeIntegration: true,
 			contextIsolation: false,
 			enableRemoteModule: true,
+			webSecurity: true,
 		},
 		backgroundColor: "#F1F5F9",
 	});
+
+	console.log(nativeTheme.themeSource);
 
 	if (process.env.WEBPACK_DEV_SERVER_URL) {
 		// Load the url of the dev server if in development mode
@@ -66,6 +67,16 @@ app.on("ready", async () => {
 			console.error("Vue Devtools failed to install:", e.toString());
 		}
 	}*/
+	const protocolName = "safe-protocol";
+	protocol.registerFileProtocol(protocolName, (request, callback) => {
+		const url = request.url.replace(`${protocolName}://`, "");
+		try {
+			return callback(decodeURIComponent(url));
+		} catch (error) {
+			// Handle the error as needed
+			console.error(error);
+		}
+	});
 	createWindow();
 });
 
