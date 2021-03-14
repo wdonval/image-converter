@@ -12,6 +12,7 @@
 		>
 			<div class="flex items-center h-5">
 				<input
+					@click="test"
 					v-model="input.active"
 					:id="`${id}-${index}`"
 					type="checkbox"
@@ -58,6 +59,9 @@
 				const dataCopy = this.data;
 				dataCopy[index].active = event.target.value;
 				this.$emit("update:data", dataCopy);
+			},
+			test() {
+				console.log(this.$store.state.settings.formats);
 			},
 		},
 	};

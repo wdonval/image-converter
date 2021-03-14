@@ -67,19 +67,6 @@
 				this.images = [];
 				this.$store.dispatch("clearImages");
 			},
-			confirm() {
-				// some code...
-				this.show = false;
-			},
-			cancel(close) {
-				// some code...
-				close();
-			},
-		},
-		watch: {
-			modal() {
-				console.log(this.modal);
-			},
 		},
 	};
 </script>
