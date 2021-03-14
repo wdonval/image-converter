@@ -2,17 +2,23 @@
 	<div class="space-y-6">
 		<SettingsBlock :index="1" title="User Interface" @save-settings="saveFormUserInterface">
 			<div class="space-y-4">
-				<Select class="max-w-lg" label="Language" :data="languages" :value="formUserInterface.language" @data-changed="setLanguage($event)" />
-				<Select class="max-w-lg" label="Theme" :data="themes" :value="formUserInterface.theme" @data-changed="setTheme($event)" />
+				<div>
+					<Select class="max-w-lg" label="Language" :data="languages" :value="formUserInterface.language" @data-changed="setLanguage($event)" />
+				</div>
+				<div>
+					<Select class="max-w-lg" label="Theme" :data="themes" :value="formUserInterface.theme" @data-changed="setTheme($event)" />
+					<p class="mt-2 text-sm text-gray-500" id="email-description">Dark mode coming soon.</p>
+				</div>
 			</div>
 		</SettingsBlock>
 		<SettingsBlock :index="2" title="Output" @save-settings="saveFormOutput">
 			<div class="space-y-4">
 				<div>
-					<label for="email" class="block text-sm font-medium text-blueGray-700">Output directory</label>
+					<label for="output-path" class="block text-sm font-medium text-blueGray-700">Output directory</label>
 					<div class="mt-1 flex rounded-md shadow-sm">
 						<div class="relative flex items-stretch flex-grow focus-within:z-10">
 							<input
+								id="output-path"
 								v-model="formOutput.outputPath"
 								type="text"
 								class="focus:ring-primary-500 focus:border-primary-500 block w-full rounded-none rounded-l-md sm:text-sm border-blueGray-300"
@@ -49,8 +55,8 @@
 	import Notification from "/~/components/Notification.vue";
 	import { useToast } from "vue-toastification";
 	const path = require("path");
-	import { promises as fsp } from "fs";
 	const dialog = require("electron").remote.dialog;
+	const nativeTheme = require("electron").remote.nativeTheme;
 
 	export default {
 		data() {
@@ -65,7 +71,7 @@
 						timout: 5000,
 					},
 				},
-				themes: [{ value: "System" }, { value: "Light theme" }, { value: "Dark theme" }],
+				themes: [{ value: "Light mode" }],
 				formUserInterface: {
 					language: null,
 					theme: null,
@@ -100,25 +106,34 @@
 				const result = await dialog.showOpenDialog({
 					properties: ["openDirectory"],
 				});
-				console.log("directories selected", result.filePaths);
 				if (result.filePaths.length > 0) {
 					this.formOutput.outputPath = result.filePaths[0];
 				}
 			},
-			saveFormUserInterface() {
-				this.$store.dispatch("setLanguage", this.formUserInterface.language);
-				this.$store.dispatch("setTheme", this.formUserInterface.theme);
+			async saveFormUserInterface() {
+				await this.$store.dispatch("setLanguage", this.formUserInterface.language);
+				await this.$store.dispatch("setTheme", this.formUserInterface.theme);
+				//this.changeTheme();
 				this.notification.props.content = "User Interface settings updated";
 				this.toast(this.notification);
 			},
-			async saveFormOutput() {
-				if (await this.checkPath()) {
-					this.$store.dispatch("setOutputPath", this.formOutput.outputPath);
-					this.notification.props.content = "Output settings updated";
-					this.toast(this.notification);
+			changeTheme() {
+				if (this.$store.state.settings.theme === "Light mode") {
+					nativeTheme.themeSource = "light";
+				} else if (this.$store.state.settings.theme === "Dark mode") {
+					nativeTheme.themeSource = "dark";
+				} else {
+					nativeTheme.themeSource = "system";
 				}
+
+				console.log(nativeTheme.themeSource);
 			},
-			async checkPath() {
+			async saveFormOutput() {
+				this.$store.dispatch("setOutputPath", this.formOutput.outputPath);
+				this.notification.props.content = "Output settings updated";
+				this.toast(this.notification);
+			},
+			/*async checkPath() {
 				this.formOutput.errors.outputPath = null;
 				try {
 					await fsp.access(this.formOutput.outputPath);
@@ -127,7 +142,7 @@
 					this.formOutput.errors.outputPath = "This directory does not exist.";
 					return false;
 				}
-			},
+			},*/
 		},
 		components: {
 			SettingsBlock,
