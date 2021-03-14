@@ -15,7 +15,7 @@
 							v-if="closable"
 							type="button"
 							class="absolute inset-0 w-full h-full cursor-default bg-blueGray-500 opacity-75 focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-primary-500"
-							@click="isModalShown = false"
+							@click="cancel"
 						></button>
 						<button
 							v-else
@@ -45,6 +45,7 @@
 								v-if="closable"
 								type="button"
 								class="bg-white rounded-md text-blueGray-400 hover:text-blueGray-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500"
+								@click.prevent="cancel"
 							>
 								<span class="sr-only">Close</span>
 								<svg
@@ -61,7 +62,7 @@
 						</div>
 						<div class="sm:flex sm:items-start">
 							<div
-								v-if="props.type === 'danger'"
+								v-if="props.type === 'danger' && props.icon"
 								class="mx-auto flex-shrink-0 flex items-center justify-center h-12 w-12 bg-red-100 rounded-full sm:mx-0 sm:h-10 sm:w-10"
 							>
 								<!-- Heroicon name: outline/exclamation -->
@@ -82,7 +83,7 @@
 								</svg>
 							</div>
 							<div
-								v-else
+								v-else-if="props.icon"
 								class="mx-auto flex-shrink-0 flex items-center justify-center h-12 w-12 bg-green-100 rounded-full sm:mx-0 sm:h-10 sm:w-10"
 							>
 								<svg
@@ -96,12 +97,15 @@
 									<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
 								</svg>
 							</div>
-							<div class="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left">
+							<div class="mt-3 w-full text-center sm:mt-0 sm:text-left" :class="props.icon ? 'sm:ml-4' : null">
 								<h3 class="text-lg leading-6 font-medium text-blueGray-900" id="modal-headline">
 									{{ props.title }}
 								</h3>
 								<div class="mt-2">
-									<p class="text-sm text-blueGray-500">
+									<template v-if="props.customContent">
+										<slot />
+									</template>
+									<p v-else class="text-sm text-blueGray-500">
 										{{ props.content }}
 									</p>
 								</div>
@@ -112,6 +116,7 @@
 								v-if="props.type === 'danger'"
 								type="button"
 								class="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-red-600 text-base font-medium text-white hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 sm:ml-3 sm:w-auto sm:text-sm"
+								@click.prevent="confirm"
 							>
 								{{ props.actionText }}
 							</button>
@@ -119,13 +124,14 @@
 								v-else
 								type="button"
 								class="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-primary-500 text-base font-medium text-white hover:bg-primary-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 sm:ml-3 sm:w-auto sm:text-sm"
+								@click.prevent="confirm"
 							>
 								{{ props.actionText }}
 							</button>
 							<button
 								type="button"
 								class="mt-3 w-full inline-flex justify-center rounded-md border border-blueGray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-blueGray-700 hover:text-blueGray-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 sm:mt-0 sm:w-auto sm:text-sm"
-								@click.prevent="isModalShown = false"
+								@click.prevent="cancel"
 							>
 								{{ props.cancelText }}
 							</button>
@@ -146,13 +152,17 @@
 				type: Boolean,
 				required: true,
 			},
+			icon: {
+				type: Boolean,
+				default: true,
+			},
 			title: {
 				type: String,
 				required: true,
 			},
 			content: {
 				type: String,
-				required: true,
+				default: "",
 			},
 			closable: {
 				type: Boolean,
@@ -166,11 +176,16 @@
 				type: String,
 				required: true,
 			},
+			customContent: {
+				type: Boolean,
+				default: false,
+			},
 			cancelText: {
 				type: String,
 				default: "Cancel",
 			},
 		},
+		emits: ["modal-cancel", "modal-confirm", "update:isModalOpen"],
 		setup(props, { emit }) {
 			const { isModalOpen } = toRefs(props);
 			const isModalShown = ref(false);
@@ -185,7 +200,16 @@
 				}, 200);
 			});
 
-			return { isModalOpen, isModalShown, props };
+			const cancel = () => {
+				isModalShown.value = false;
+				emit("modal-cancel");
+			};
+			const confirm = () => {
+				isModalShown.value = false;
+				emit("modal-confirm");
+			};
+
+			return { isModalOpen, isModalShown, props, cancel, confirm };
 		},
 	});
 </script>
